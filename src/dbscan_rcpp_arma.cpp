@@ -407,23 +407,23 @@ double mahalanobis_distance(const std::vector<double>& pointA,
 
 
 /*** R
-library(factoextra)
-data("multishapes")
-
-og_data <- multishapes[, 1:2]
-
-plot(og_data)
-
-rows_t <- sample(1:nrow(og_data), nrow(og_data)*0.7)
-df_train <- og_data[rows_t, ]
-
-df_dbscan <- dbscan_train(df = as.matrix(og_data), eps = 0.15, minPts = 5,
-                          dis_metric = "euclidean")
-
-p <- plot_dbscan(mod_data = og_data, mod = df_dbscan)
-p
-
-p + labs(title = "DBSCAN with Euclidean Distance")
+# library(factoextra)
+# data("multishapes")
+# 
+# og_data <- multishapes[, 1:2]
+# 
+# plot(og_data)
+# 
+# rows_t <- sample(1:nrow(og_data), nrow(og_data)*0.7)
+# df_train <- og_data[rows_t, ]
+# 
+# df_dbscan <- dbscan_train(df = as.matrix(og_data), eps = 0.15, minPts = 5,
+#                           dis_metric = "euclidean")
+# 
+# p <- plot_dbscan(mod_data = og_data, mod = df_dbscan)
+# p
+# 
+# p + labs(title = "DBSCAN with Euclidean Distance")
 
 
 # df_dbscan <- dbscan_train(df = as.matrix(og_data), eps = 0.15, minPts = 7,
