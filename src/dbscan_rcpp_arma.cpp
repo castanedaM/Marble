@@ -47,7 +47,7 @@ class Point {
 private:
   std::vector<int> neighbors;
   int id;
-
+  
   
 public:
   int cluster;
@@ -143,7 +143,7 @@ arma::mat dbscan_train(arma::mat& df, double eps, int minPts,
                        std::string dis_metric = "euclidean"){
   
   std::vector< std::vector<double> > predictors = dfToVecVec(df);
-
+  
   std::vector<Point> points_dbscan;
   
   arma::mat cov_mat;
@@ -204,8 +204,8 @@ arma::mat dbscan_train(arma::mat& df, double eps, int minPts,
         
         item.setCluster(cluster);
         
-       std::vector<int> v;
-       std::vector<int> n = getNeighborhood(points_dbscan, v, item.getId());
+        std::vector<int> v;
+        std::vector<int> n = getNeighborhood(points_dbscan, v, item.getId());
         
         // Remove duplicates
         sort(n.begin(), n.end());
@@ -231,9 +231,9 @@ arma::mat dbscan_train(arma::mat& df, double eps, int minPts,
     }
   }
   
- std::vector<int> ids;
- std::vector<int> clusters;
- std::vector<std::string> labels;
+  std::vector<int> ids;
+  std::vector<int> clusters;
+  std::vector<std::string> labels;
   
   for(Point item:points_dbscan){
     ids.push_back(item.getId());
@@ -366,6 +366,7 @@ std::vector< std::vector<double> > dfToVecVec(arma::mat& df) {
   return vecvec;
 }
 
+
 // [[Rcpp::export]]
 double euclidean_distance(const std::vector<double>& pointA, 
                           const std::vector<double>& pointB){
@@ -380,14 +381,13 @@ double euclidean_distance(const std::vector<double>& pointA,
   return sqrt(distance);
 }
 
-
 // [[Rcpp::export]]
 double mahalanobis_distance(const std::vector<double>& pointA,
                             const std::vector<double>& pointB,
                             const arma::mat& cov_mat) {
-
+  
   int n = pointA.size();
-
+  
   // convert std::vector to arma::colvec
   arma::colvec vecA(n);
   arma::colvec vecB(n);
@@ -395,20 +395,61 @@ double mahalanobis_distance(const std::vector<double>& pointA,
     vecA(i) = pointA[i];
     vecB(i) = pointB[i];
   }
-
+  
   // calculate Mahalanobis distance
   arma::colvec diff = vecB - vecA;
   double distance = as_scalar(diff.t() * inv(cov_mat) * diff);
   distance = sqrt(distance);
-
+  
   return distance;
 }
 
 
 
+
+
+
 /*** R
+# Testing Mahalanobis distance calcualtions
+
 # library(factoextra)
 # data("multishapes")
+# 
+# n <- 50
+# shape_data <- multishapes[1:n, 1:2]
+# cov_mat <- cov(shape_data)
+# # shape_data <- asplit(shape_data, 1)
+# 
+# points <- dfToVecVec(as.matrix(shape_data))
+# 
+# points_euc <- matrix(NA, ncol = n, nrow = n)
+# points_mah <- matrix(NA, ncol = n, nrow = n)
+# 
+# for(i in 1:n){
+#   for(j in 1:n){
+#   points_euc[i, j] <- euclidean_distance(points[[i]], points[[j]])
+#   points_mah[i, j] <- mahalanobis_distance(points[[i]], points[[j]], cov_mat)
+#   }
+# }
+# 
+# heatmap(points_euc, Rowv = NA,  Colv = "Rowv")
+# heatmap(points_mah, Rowv = NA,  Colv = "Rowv")
+# 
+# quantile(points_euc)
+# quantile(points_mah)
+# 
+
+*/
+
+
+/*** R
+
+# # Testing it with other examples
+# 
+# 
+# library(factoextra)
+# data("multishapes")
+# source("supporting_functions.R")
 # 
 # og_data <- multishapes[, 1:2]
 # 
@@ -428,13 +469,12 @@ double mahalanobis_distance(const std::vector<double>& pointA,
 
 # df_dbscan <- dbscan_train(df = as.matrix(og_data), eps = 0.15, minPts = 7,
 #                           dis_metric = "mahalanobis")
-# 
+#
 # table(df_dbscan[, 2])
-# 
+#
 # p2 <- plot_dbscan(mod_data = og_data, mod = df_dbscan)
 # p2
-# 
+#
 # p2 + labs(title = "DBSCAN with Mahalanobis Distance")
 
 */
-

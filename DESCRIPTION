@@ -3,8 +3,8 @@ Type: Package
 Title: What the package does (short line)
 Version: 1.0
 Date: 2023-04-19
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
+Author: Castaneda-Guzman, Mariana
+Maintainer: Who to complain to <marianacg@vt.edu>
 Description: More about what it does (maybe more than one line)
 License: What license is it under?
 Imports: Rcpp (>= 1.0.9), ggplot2, RColorBrewer
